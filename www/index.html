@@ -1,0 +1,3021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chicken</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#240028">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: lavenderblush;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #222;
+    overflow-x: hidden;
+  }
+
+  header {
+    background: lavenderblush;
+    width: fit-content;
+    justify-content: center;
+    text-align: center;
+    padding: 0;
+    margin: 8px auto 12px auto;
+    color: #240028;
+    font-size: 45px;
+    font-weight: bold;
+    position: relative;
+    border-radius: 14px;
+    text-shadow: 0.5px 3px 2.5px rgba(0,0,0,0.5);
+  }
+
+  .header-logo {
+    display: block;
+    width: auto;
+    max-width: 200px;
+    max-height: 100px;
+    height: auto;
+  }
+
+  main {
+    padding: 15px;
+  }
+
+  section {
+    background: snow;
+    margin: 15px auto;
+    padding: 15px;
+    border-radius: 12px;
+    max-width: 420px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  input, button {
+    margin: 6px;
+    padding: 10px;
+    width: 100%;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  button {
+    background: #d8bfd8;
+    color: #240028;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover, button:focus {
+    background: #AC7DC1;
+    color: snow;
+    outline: none;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  .btn-selected {
+    background: #AC7DC1 !important;
+    color: snow;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    text-align: left;
+    position: relative;
+  }
+
+  .modal h3 {
+    margin: 0 0 15px 0;
+    color: #008080;
+    font-size: 1.3em;
+  }
+
+  .modal p {
+    margin: 10px 0;
+    line-height: 1.5;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .modal-actions button {
+    flex: 1;
+    padding: 12px;
+    font-size: 1em;
+  }
+
+  .btn-cancel {
+    background: #ccc;
+    color: #333;
+  }
+
+  .btn-cancel:hover {
+    background: #bbb;
+  }
+
+  #recibo,
+  #historial,
+  #resumen-contenido,
+  #deudas-lista,
+  #pagados-lista,
+  #recordatorios,
+  #inventario-preview,
+  #resumen-final {
+    text-align: left;
+    background: #fff;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  h3 {
+    margin-bottom: 12px;
+    color: #240028;
+    font-size: 30px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 0.95em;
+  }
+
+  th, td {
+    padding: 10px 6px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  th {
+    color: #240028;
+    text-shadow: 0.5px 2px 2px rgba(0,0,0,0.5);
+    font-weight: 600;
+  }
+
+  .btn-small {
+    padding: 6px 10px;
+    font-size: 0.85em;
+    margin-left: 4px;
+    min-width: 90px;
+  }
+
+  #polloSelectionContainer h4 {
+    margin: 12px 0 8px;
+    color: #240028;
+    font-size: 25px;
+  }
+
+  #pollo-grid {
+    color: black;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .pollo-item {
+    display: flex;
+    align-items: center;
+    color: #240028;
+    background: #d8bfd8;
+    border-radius: 6px;
+    padding: 6px 4px;
+    font-size: 0.82em;
+    justify-content: center;
+  }
+
+  .pollo-item input[type="checkbox"] {
+    margin-right: 2px;
+    transform: scale(1.2);
+  }
+
+  .metodo-buttons {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+  }
+
+  .metodo-btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  #banner-color {
+    width: 80%;
+    height: 40px;
+    background: #AC7DC1;
+    margin: 0 auto 15px;
+  }
+</style>
+</head>
+
+<body>
+
+<header id="titulo">
+  <img src="logo-chicken.png" alt="Chicken" class="header-logo">
+</header>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+
+    <h3 id="modal-title">Título</h3>
+
+    <p id="modal-message">Mensaje</p>
+
+    <div id="modal-extra"></div>
+
+    <div class="modal-actions">
+
+      <button
+        class="btn-cancel"
+        onclick="cancelarAccionModal()">
+        Cancelar
+      </button>
+
+      <button
+        id="modal-confirm-btn"
+        onclick="ejecutarAccionModal()">
+        Aceptar
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <section id="inventario">
+
+    <h3>
+      <i class="fas fa-box"></i>
+      Inventario de Pollos
+    </h3>
+
+    <input
+      type="number"
+      id="peso"
+      placeholder="Peso del pollo (gramos)"
+      step="0.001"
+      min="0.001"
+    >
+
+    <div style="display:flex;gap:8px;justify-content:center;">
+
+      <button
+        style="width:48%"
+        onclick="agregarPollo()">
+        <i class="fas fa-plus"></i>
+        Agregar
+      </button>
+
+      <button
+        style="width:48%"
+        onclick="verInventario()">
+        <i class="fas fa-eye"></i>
+        Ver
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <section id="venta">
+
+    <h3>
+      <i class="fas fa-cash-register"></i>
+      Registrar Venta
+    </h3>
+
+    <input
+      type="text"
+      id="cliente"
+      placeholder="Nombre del Cliente"
+    >
+
+    <div id="polloSelectionContainer">
+
+      <h4>Seleccionar pollos:</h4>
+
+      <div id="pollo-grid"></div>
+
+    </div>
+
+    <input
+      type="number"
+      id="precio"
+      placeholder="Precio por kilo"
+      step="1"
+      min="1"
+    >
+
+    <div class="metodo-buttons">
+
+      <button
+        class="metodo-btn btn-selected"
+        data-metodo="Efectivo"
+        onclick="seleccionarMetodo('Efectivo', this)">
+        <i class="fas fa-money-bill-wave"></i>
+        Efectivo
+      </button>
+
+      <button
+        class="metodo-btn"
+        data-metodo="Nequi"
+        onclick="seleccionarMetodo('Nequi', this)">
+        <i class="fas fa-mobile-alt"></i>
+        Nequi
+      </button>
+
+      <button
+        class="metodo-btn"
+        data-metodo="Fiado"
+        onclick="seleccionarMetodo('Fiado', this)">
+        <i class="fas fa-handshake"></i>
+        Fiado
+      </button>
+
+    </div>
+
+    <input
+      type="hidden"
+      id="metodoPago"
+      value="Efectivo"
+    >
+
+    <button onclick="venderPollos()">
+      <i class="fas fa-receipt"></i>
+      Generar Recibo
+    </button>
+
+  </section>
+
+
+  <section>
+
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    ">
+
+      <button onclick="mostrarHistorial()">
+        <i class="fas fa-clipboard-list"></i>
+        Historial
+      </button>
+
+      <button onclick="mostrarDeudas()">
+        <i class="fas fa-hand-holding-usd"></i>
+        Deudas
+      </button>
+
+      <button onclick="mostrarPagados()">
+        <i class="fas fa-check-circle"></i>
+        Pagados
+      </button>
+
+      <button onclick="mostrarResumen()">
+        <i class="fas fa-chart-bar"></i>
+        Resumen
+      </button>
+
+      <button onclick="finalizarVenta()">
+        <i class="fas fa-flag-checkered"></i>
+        Finalizar
+      </button>
+
+      <button onclick="enviarRecordatorios()">
+        <i class="fas fa-bell"></i>
+        Recordatorios
+      </button>
+      <button onclick="mostrarGaleriaRecibos()">
+        <i class="fas fa-images"></i>
+        Galería de Recibos
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <section id="recibo" class="hidden"></section>
+
+  <section id="historial" class="hidden"></section>
+
+  <section id="resumen-contenido" class="hidden"></section>
+
+  <section id="deudas-lista" class="hidden"></section>
+
+  <section id="pagados-lista" class="hidden"></section>
+
+  <section id="recordatorios" class="hidden"></section>
+
+  <section id="inventario-preview" class="hidden"></section>
+
+  <section id="resumen-final" class="hidden"></section>
+
+</main>
+
+
+<script>
+
+let inventario =
+  JSON.parse(localStorage.getItem('inventario')) || [];
+
+let recibos =
+  JSON.parse(localStorage.getItem('recibos')) || [];
+
+let refCount =
+  recibos.length > 0
+  ? Math.max(
+      ...recibos.map(
+        r => parseInt(r.ref.split('-')[2])
+      )
+    ) + 1
+  : 1;
+
+
+let accionModal = null;
+let accionCancelar = null;
+
+
+function guardarDatos() {
+
+  localStorage.setItem(
+    'inventario',
+    JSON.stringify(inventario)
+  );
+
+  localStorage.setItem(
+    'recibos',
+    JSON.stringify(recibos)
+  );
+
+}
+
+
+function ocultarTodasLasSecciones() {
+
+  [
+    'recibo',
+    'historial',
+    'resumen-contenido',
+    'deudas-lista',
+    'pagados-lista',
+    'recordatorios',
+    'inventario-preview',
+    'resumen-final'
+  ].forEach(id => {
+
+    document
+      .getElementById(id)
+      .classList
+      .add('hidden');
+
+  });
+
+}
+
+
+function mostrarModal(
+  titulo,
+  mensaje,
+  accion = null,
+  extra = null,
+  onCancelar = null
+) {
+
+  document.getElementById(
+    'modal-title'
+  ).innerHTML = titulo;
+
+  document.getElementById(
+    'modal-message'
+  ).innerHTML = mensaje;
+
+  const extraEl =
+    document.getElementById('modal-extra');
+
+  if (extra) {
+
+    extraEl.innerHTML = extra;
+    extraEl.style.display = 'block';
+
+  } else {
+
+    extraEl.style.display = 'none';
+
+  }
+
+  accionModal = accion;
+  accionCancelar = onCancelar;
+
+  document
+    .getElementById('modal-overlay')
+    .classList
+    .add('active');
+
+}
+
+
+function cancelarAccionModal() {
+
+  if (
+    typeof accionCancelar === 'function'
+  ) {
+    accionCancelar();
+  }
+
+  document
+    .getElementById('modal-overlay')
+    .classList
+    .remove('active');
+
+  accionModal = null;
+  accionCancelar = null;
+
+}
+
+
+function ejecutarAccionModal() {
+
+  if (
+    typeof accionModal === 'function'
+  ) {
+    accionModal();
+  }
+
+  document
+    .getElementById('modal-overlay')
+    .classList
+    .remove('active');
+
+  accionModal = null;
+  accionCancelar = null;
+
+}
+
+
+function seleccionarMetodo(metodo, btn) {
+
+  document
+    .querySelectorAll('.metodo-btn')
+    .forEach(
+      b => b.classList.remove('btn-selected')
+    );
+
+  btn.classList.add('btn-selected');
+
+  const hidden =
+    document.getElementById('metodoPago');
+
+  hidden.value =
+    (metodo === 'Fiado')
+    ? 'Deuda'
+    : metodo;
+
+}
+
+
+// ─── INVENTARIO ───────────────────────────────
+
+function agregarPollo() {
+
+  const peso =
+    parseFloat(
+      document.getElementById('peso').value
+    );
+
+  if (!peso || peso <= 0) {
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Peso inválido',
+      'Ingrese un peso > 0.'
+    );
+
+    return;
+  }
+
+  const indice = inventario.length;
+
+  inventario.push({
+    peso,
+    vendido: false
+  });
+
+  guardarDatos();
+
+  document.getElementById('peso').value = '';
+
+  actualizarPollosSeleccionables();
+
+  mostrarModal(
+    '<i class="fas fa-check-circle"></i> Éxito',
+    'Pollo agregado.',
+    null,
+    null,
+    () => {
+
+      inventario.splice(indice, 1);
+
+      guardarDatos();
+
+      actualizarPollosSeleccionables();
+
+    }
+  );
+
+}
+
+
+function actualizarPollosSeleccionables() {
+
+  const container =
+    document.getElementById('pollo-grid');
+
+  container.innerHTML = '';
+
+  let hayDisponibles = false;
+
+  inventario.forEach((p, i) => {
+
+    if (!p.vendido) {
+
+      hayDisponibles = true;
+
+      const div =
+        document.createElement('div');
+
+      div.className = 'pollo-item';
+
+      div.innerHTML = `
+        <label>
+          <input
+            type="checkbox"
+            class="pollo-checkbox"
+            data-index="${i}"
+          >
+          ${p.peso.toFixed(3)} (g)
+        </label>
+      `;
+
+      container.appendChild(div);
+
+    }
+
+  });
+
+  if (!hayDisponibles) {
+
+    container.innerHTML =
+      '<p style="grid-column:1/-1;text-align:center;color:#888;">No hay pollos.</p>';
+
+  }
+
+}
+
+
+// ─── VENTAS ──────────────────────────────────
+
+function venderPollos() {
+
+  const cliente =
+    document.getElementById('cliente')
+      .value
+      .trim();
+
+  const precio =
+    parseFloat(
+      document.getElementById('precio').value
+    );
+
+  const metodo =
+    document.getElementById('metodoPago')
+      .value;
+
+  const checkboxes =
+    document.querySelectorAll(
+      '.pollo-checkbox:checked'
+    );
+
+
+  if (!cliente) {
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Cliente requerido',
+      'Ingrese el nombre.'
+    );
+
+    return;
+  }
+
+
+  if (!precio || precio < 1) {
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Precio inválido',
+      'Precio ≥ 1.'
+    );
+
+    return;
+  }
+
+
+  if (checkboxes.length === 0) {
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Seleccione pollos',
+      'Elija al menos uno.'
+    );
+
+    return;
+  }
+
+
+  const indices =
+    Array.from(checkboxes)
+      .map(
+        cb => parseInt(cb.dataset.index)
+      );
+
+
+  let totalGeneral = 0;
+
+  const pollosVendidos = [];
+
+
+  for (const i of indices) {
+
+    const pollo = inventario[i];
+
+    if (!pollo || pollo.vendido) {
+
+      mostrarModal(
+        '<i class="fas fa-times-circle"></i> Error',
+        'Alguno ya fue vendido.'
+      );
+
+      return;
+    }
+
+    const subtotal =
+      pollo.peso * precio;
+
+    totalGeneral += subtotal;
+
+    pollosVendidos.push({
+      peso: pollo.peso,
+      subtotal
+    });
+
+    pollo.vendido = true;
+
+  }
+
+
+  const ref =
+    `VP-K25-${String(refCount).padStart(4,'0')}`;
+
+
+  const fecha =
+    new Date().toLocaleString(
+      "es-CO",
+      {
+        timeZone: "America/Caracas",
+        hour12: true
+      }
+    );
+
+
+  const recibo = {
+
+    ref,
+
+    cliente,
+
+    pollos: pollosVendidos,
+
+    precioPorKilo: precio,
+
+    total: totalGeneral,
+
+    metodo,
+
+    fecha
+
+  };
+
+
+  recibos.push(recibo);
+
+  refCount++;
+
+  guardarDatos();
+
+  mostrarRecibo(recibo); compartirReciboNativo(recibo);
+
+  actualizarPollosSeleccionables();
+
+  document.getElementById('cliente').value = '';
+
+}
+
+
+function formatearCOP(valor) {
+
+  return new Intl.NumberFormat(
+    'es-CO',
+    {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }
+  ).format(valor);
+
+}
+
+
+// ─── FACTURA / RECORDATORIO ────────────────
+
+function cargarImagenLogo() {
+
+  return new Promise((resolve, reject) => {
+
+    const logo = new Image();
+
+    logo.onload = () => resolve(logo);
+
+    logo.onerror = () =>
+      reject(
+        new Error(
+          'No se pudo cargar logo-recibo.png'
+        )
+      );
+
+    logo.src = 'logo-recibo.png';
+
+  });
+
+}
+
+
+async function dibujarRecordatorioCanvas(recibo) {
+
+  const logo =
+    await cargarImagenLogo();
+
+
+  const ancho = 600;
+
+  const margenLateral = 60;
+
+  const margenSuperior = 50;
+
+  const margenInferior = 60;
+
+  const scale = 2;
+
+  const lineHeight = 32;
+
+
+  // ─── LOGO MÁS GRANDE ────────────────────
+
+  const maxLogoAncho = 480;
+
+  const maxLogoAlto = 195;
+
+
+  // Solo la fecha (sin hora)
+
+  const soloFecha =
+    recibo.fecha.split(',')[0].trim();
+
+
+  // Fuentes
+
+  const bodyFont =
+    '20px "Lucida Console", "Courier New", monospace';
+
+  const boldBodyFont =
+    'bold 21px "Lucida Console", "Courier New", monospace';
+
+  const boldTotalFont =
+    'bold 23px "Lucida Console", "Courier New", monospace';
+
+
+  // ─── LÍNEAS DEL CUERPO ──────────────────
+
+  const lineas = [];
+
+  lineas.push({
+    texto: `Nombre: ${recibo.cliente}`,
+    font: bodyFont
+  });
+
+  lineas.push({
+    texto: `Cantidad: ${recibo.pollos.length} pollo(s)`,
+    font: bodyFont
+  });
+
+  recibo.pollos.forEach((p, idx) => {
+
+    lineas.push({
+      texto: `Pollo ${idx + 1}`,
+      font: boldBodyFont,
+      gapBefore: 20
+    });
+
+    lineas.push({
+      texto: `Peso: ${p.peso.toFixed(3)} g`,
+      font: bodyFont
+    });
+
+    lineas.push({
+      texto: `Valor/kg: ${formatearCOP(recibo.precioPorKilo)}`,
+      font: bodyFont
+    });
+
+    lineas.push({
+      texto: `Valor: ${formatearCOP(p.subtotal)}`,
+      font: bodyFont
+    });
+
+  });
+
+  // Total en NEGRITA
+
+  lineas.push({
+    texto: `Total: ${formatearCOP(recibo.total)}`,
+    font: boldTotalFont,
+    gapBefore: 24
+  });
+
+  lineas.push({
+    texto: `Fecha: ${soloFecha}`,
+    font: bodyFont
+  });
+
+
+  // ─── ALTO DEL CUERPO ────────────────────
+
+  let bodyAltura = 0;
+
+  lineas.forEach(l => {
+
+    if (l.gapBefore) bodyAltura += l.gapBefore;
+
+    bodyAltura += lineHeight;
+
+  });
+
+
+  // ─── ALTO TOTAL ─────────────────────────
+
+  const altoTotal =
+    margenSuperior +
+    maxLogoAlto +   // logo
+    40 +            // gap
+    30 +            // ref
+    20 +            // gap
+    40 +            // gap línea
+    bodyAltura +    // cuerpo
+    10 +            // gap
+    40 +            // gap línea final
+    30 +            // footer
+    margenInferior;
+
+
+  // ─── CANVAS ─────────────────────────────
+
+  const canvas =
+    document.createElement('canvas');
+
+  const ctx =
+    canvas.getContext('2d');
+
+  canvas.width = ancho * scale;
+
+  canvas.height = altoTotal * scale;
+
+  ctx.scale(scale, scale);
+
+
+  // Fondo blanco
+
+  ctx.fillStyle = '#ffffff';
+
+  ctx.fillRect(0, 0, ancho, altoTotal);
+
+  ctx.fillStyle = '#000000';
+
+
+  // ─── LOGO (centrado) ────────────────────
+
+  const ratio =
+    Math.min(
+      maxLogoAncho / logo.width,
+      maxLogoAlto / logo.height
+    );
+
+  const logoAncho = logo.width * ratio;
+
+  const logoAlto = logo.height * ratio;
+
+  const logoY =
+    margenSuperior +
+    (maxLogoAlto - logoAlto) / 2;
+
+  ctx.drawImage(
+    logo,
+    (ancho - logoAncho) / 2,
+    logoY,
+    logoAncho,
+    logoAlto
+  );
+
+
+  // ─── REFERENCIA (centrada) ──────────────
+
+  let y =
+    margenSuperior + maxLogoAlto + 40 + 30;
+
+  ctx.textAlign = 'center';
+
+  ctx.font =
+    'bold 26px "Lucida Console", "Courier New", monospace';
+
+  ctx.fillText(
+    recibo.ref,
+    ancho / 2,
+    y
+  );
+
+
+  // ─── LÍNEA SUPERIOR ─────────────────────
+
+  y += 20;
+
+  ctx.strokeStyle = '#222222';
+
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+
+  ctx.moveTo(margenLateral, y);
+
+  ctx.lineTo(ancho - margenLateral, y);
+
+  ctx.stroke();
+
+
+  // ─── CUERPO (alineado a la IZQUIERDA) ───
+
+  y += 40;
+
+  ctx.textAlign = 'left';
+
+  lineas.forEach(l => {
+
+    if (l.gapBefore) y += l.gapBefore;
+
+    ctx.font = l.font;
+
+    ctx.fillText(
+      l.texto,
+      margenLateral,
+      y
+    );
+
+    y += lineHeight;
+
+  });
+
+
+  // ─── LÍNEA INFERIOR ─────────────────────
+
+  y += 10;
+
+  ctx.strokeStyle = '#222222';
+
+  ctx.beginPath();
+
+  ctx.moveTo(margenLateral, y);
+
+  ctx.lineTo(ancho - margenLateral, y);
+
+  ctx.stroke();
+
+
+  // ─── PIE (centrado) ─────────────────────
+
+  y += 40;
+
+  ctx.textAlign = 'center';
+
+  ctx.font =
+    'bold 20px "Lucida Console", "Courier New", monospace';
+
+  ctx.fillText(
+    'Gracias por su compra.',
+    ancho / 2,
+    y
+  );
+
+
+  return canvas;
+
+}
+
+
+// ─── MOSTRAR RECIBO ───────────────────────
+
+function mostrarRecibo(r) {
+
+  ocultarTodasLasSecciones();
+
+  const div =
+    document.getElementById('recibo');
+
+  div.classList.remove('hidden');
+
+
+  let pollosHTML = '';
+
+
+  r.pollos.forEach((p, idx) => {
+
+    pollosHTML += `
+      <p>
+        ${p.peso.toFixed(3)}
+        (gramos) ×
+        ${formatearCOP(r.precioPorKilo)}
+        =
+        ${formatearCOP(p.subtotal)}
+      </p>
+    `;
+
+  });
+
+
+  div.innerHTML = `
+
+    <h3>
+      <i class="fas fa-receipt"></i>
+      Venta de Pollos K
+    </h3>
+
+    <p>
+      <strong>Ref:</strong>
+      ${r.ref}
+    </p>
+
+    <p>
+      <strong>${r.cliente}</strong>
+    </p>
+
+    ${pollosHTML}
+
+    <p>
+      <strong>Total:</strong>
+      ${formatearCOP(r.total)}
+    </p>
+
+    <p>
+      <strong>Método:</strong>
+      ${r.metodo}
+    </p>
+
+    <h4>
+      ¡Gracias por tu compra!
+      <i class="fas fa-drumstick-bite"></i>
+    </h4>
+
+    <button
+      onclick="compartirReciboComoImagen('${r.ref}')">
+
+      <i class="fas fa-share-alt"></i>
+      Enviar por WhatsApp
+
+    </button>
+
+  `;
+
+}
+
+
+// ─── COMPARTIR RECIBO ─────────────────────
+
+async function compartirReciboComoImagen(ref) {
+
+  const r =
+    recibos.find(
+      x => x.ref === ref
+    );
+
+  if (!r) return;
+
+
+  const canvas =
+    await dibujarRecordatorioCanvas(r);
+
+
+  const blob =
+    await new Promise(
+      resolve =>
+        canvas.toBlob(
+          resolve,
+          'image/png'
+        )
+    );
+
+
+  const filename =
+    `${r.ref}.png`;
+
+
+  const file =
+    new File(
+      [blob],
+      filename,
+      {
+        type: 'image/png'
+      }
+    );
+
+
+  if (
+    navigator.share &&
+    navigator.canShare &&
+    navigator.canShare({
+      files: [file]
+    })
+  ) {
+
+    await navigator.share({
+
+      files: [file],
+
+      text: 'recordatorio de deuda 🔔'
+
+    });
+
+  } else {
+
+    const imgUrl =
+      canvas.toDataURL('image/png');
+
+    const link =
+      document.createElement('a');
+
+    link.href = imgUrl;
+
+    link.download = filename;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+  }
+
+
+  ocultarTodasLasSecciones();
+
+}
+
+
+// ─── HISTORIAL ────────────────────────────
+
+function mostrarHistorial() {
+
+  ocultarTodasLasSecciones();
+
+  const div =
+    document.getElementById('historial');
+
+  div.classList.remove('hidden');
+
+
+  if (recibos.length === 0) {
+
+    div.innerHTML =
+      '<h3><i class="fas fa-clipboard-list"></i> Sin ventas</h3><p>No hay ventas aún.</p>';
+
+    return;
+
+  }
+
+
+  let tabla = `
+    <h3>
+      <i class="fas fa-clipboard-list"></i>
+      Historial
+    </h3>
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Ref</th>
+          <th>Cliente</th>
+          <th>Pollos</th>
+          <th>Total</th>
+          <th>Acciones</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+  `;
+
+
+  recibos.forEach(r => {
+
+    tabla += `
+
+      <tr>
+
+        <td>${r.ref}</td>
+
+        <td>${r.cliente}</td>
+
+        <td>${r.pollos.length}</td>
+
+        <td>
+          ${formatearCOP(r.total)}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small"
+            onclick="borrarRecibo('${r.ref}')">
+
+            <i class="fas fa-trash-alt"></i>
+
+          </button>
+
+
+          <button
+            class="btn-small"
+            onclick="abrirModalEdicion('${r.ref}')">
+
+            <i class="fas fa-edit"></i>
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+
+  tabla += `
+      </tbody>
+    </table>
+  `;
+
+
+  div.innerHTML = tabla;
+
+}
+
+
+// ─── DEUDAS ───────────────────────────────
+
+function mostrarDeudas() {
+
+  ocultarTodasLasSecciones();
+
+  const deudas =
+    recibos.filter(
+      r => r.metodo === 'Deuda'
+    );
+
+  const div =
+    document.getElementById('deudas-lista');
+
+  div.classList.remove('hidden');
+
+
+  if (deudas.length === 0) {
+
+    div.innerHTML =
+      '<h3><i class="fas fa-hand-holding-usd"></i> Sin deudas</h3><p>No hay deudas pendientes.</p>';
+
+    return;
+
+  }
+
+
+  let tabla = `
+    <h3>
+      <i class="fas fa-hand-holding-usd"></i>
+      Deudas
+    </h3>
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Ref</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Acción</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+  `;
+
+
+  deudas.forEach(r => {
+
+    tabla += `
+
+      <tr>
+
+        <td>${r.ref}</td>
+
+        <td>${r.cliente}</td>
+
+        <td>
+          ${formatearCOP(r.total)}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small"
+            onclick="abrirModalPago('${r.ref}')">
+
+            <i class="fas fa-check-circle"></i>
+            Pagar
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+
+  tabla += `
+      </tbody>
+    </table>
+  `;
+
+
+  div.innerHTML = tabla;
+
+}
+
+
+// ─── PAGAR DEUDA ─────────────────────────
+
+function abrirModalPago(ref) {
+
+  const extraHTML = `
+
+    <div style="
+      display:flex;
+      gap:8px;
+      margin-top:12px;
+    ">
+
+      <button
+        class="metodo-btn btn-selected"
+        id="btn-efectivo"
+        data-metodo="Efectivo"
+        onclick="seleccionarMetodoModal('Efectivo', this)">
+
+        <i class="fas fa-money-bill-wave"></i>
+        Efectivo
+
+      </button>
+
+      <button
+        class="metodo-btn"
+        id="btn-nequi"
+        data-metodo="Nequi"
+        onclick="seleccionarMetodoModal('Nequi', this)">
+
+        <i class="fas fa-mobile-alt"></i>
+        Nequi
+
+      </button>
+
+    </div>
+
+  `;
+
+
+  mostrarModal(
+    '<i class="fas fa-check-circle"></i> ¿Marcar como pagado?',
+    'Seleccione el método recibido:',
+    () => confirmarPago(ref),
+    extraHTML
+  );
+
+}
+
+
+let metodoPagoSeleccionado = 'Efectivo';
+
+
+function seleccionarMetodoModal(
+  metodo,
+  btn
+) {
+
+  document
+    .querySelectorAll('.metodo-btn')
+    .forEach(
+      b => b.classList.remove(
+        'btn-selected'
+      )
+    );
+
+  btn.classList.add(
+    'btn-selected'
+  );
+
+  metodoPagoSeleccionado =
+    metodo;
+
+}
+
+
+function confirmarPago(ref) {
+
+  const recibo =
+    recibos.find(
+      r => r.ref === ref
+    );
+
+
+  if (
+    recibo &&
+    recibo.metodo === 'Deuda'
+  ) {
+
+    recibo.metodo =
+      metodoPagoSeleccionado;
+
+    guardarDatos();
+
+
+    mostrarModal(
+      '<i class="fas fa-check-circle"></i> Éxito',
+      `Pago registrado como ${metodoPagoSeleccionado}.`
+    );
+
+
+    mostrarDeudas();
+
+  }
+
+}
+
+
+// ─── PAGADOS ─────────────────────────────
+
+function mostrarPagados() {
+
+  ocultarTodasLasSecciones();
+
+  const pagados =
+    recibos.filter(
+      r => r.metodo !== 'Deuda'
+    );
+
+  const div =
+    document.getElementById(
+      'pagados-lista'
+    );
+
+  div.classList.remove(
+    'hidden'
+  );
+
+
+  if (pagados.length === 0) {
+
+    div.innerHTML =
+      '<h3><i class="fas fa-check-circle"></i> Sin pagos</h3><p>No hay ventas pagadas.</p>';
+
+    return;
+
+  }
+
+
+  let tabla = `
+
+    <h3>
+      <i class="fas fa-check-circle"></i>
+      Pagados
+    </h3>
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Ref</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Método</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+  `;
+
+
+  pagados.forEach(r => {
+
+    tabla += `
+
+      <tr>
+
+        <td>${r.ref}</td>
+
+        <td>${r.cliente}</td>
+
+        <td>
+          ${formatearCOP(r.total)}
+        </td>
+
+        <td>${r.metodo}</td>
+
+      </tr>
+
+    `;
+
+  });
+
+
+  tabla += `
+      </tbody>
+    </table>
+  `;
+
+
+  div.innerHTML = tabla;
+
+}
+
+
+// ─── RESUMEN ──────────────────────────────
+
+function mostrarResumen() {
+
+  ocultarTodasLasSecciones();
+
+  const efectivo =
+    recibos.filter(
+      r => r.metodo === 'Efectivo'
+    );
+
+  const nequi =
+    recibos.filter(
+      r => r.metodo === 'Nequi'
+    );
+
+  const deudas =
+    recibos.filter(
+      r => r.metodo === 'Deuda'
+    );
+
+
+  const totalEfectivo =
+    efectivo.reduce(
+      (a, b) => a + b.total,
+      0
+    );
+
+  const totalNequi =
+    nequi.reduce(
+      (a, b) => a + b.total,
+      0
+    );
+
+  const totalDeuda =
+    deudas.reduce(
+      (a, b) => a + b.total,
+      0
+    );
+
+
+  const div =
+    document.getElementById(
+      'resumen-contenido'
+    );
+
+  div.classList.remove(
+    'hidden'
+  );
+
+
+  div.innerHTML = `
+
+    <h3>
+      <i class="fas fa-chart-bar"></i>
+      Resumen
+    </h3>
+
+    <p>
+      <strong>Efectivo:</strong>
+      ${formatearCOP(totalEfectivo)}
+    </p>
+
+    <p>
+      <strong>Nequi:</strong>
+      ${formatearCOP(totalNequi)}
+    </p>
+
+    <p>
+      <strong>Fiado:</strong>
+      ${formatearCOP(totalDeuda)}
+    </p>
+
+    <hr>
+
+    <p>
+      <strong>Total recaudado:</strong>
+      ${formatearCOP(
+        totalEfectivo + totalNequi
+      )}
+    </p>
+
+    <p>
+      <strong>Ventas:</strong>
+      ${recibos.length}
+    </p>
+
+  `;
+
+}
+
+
+// ─── RECORDATORIOS ───────────────────────
+
+function enviarRecordatorios() {
+
+  ocultarTodasLasSecciones();
+
+  const deudas =
+    recibos.filter(
+      r => r.metodo === 'Deuda'
+    );
+
+  const div =
+    document.getElementById(
+      'recordatorios'
+    );
+
+  div.classList.remove(
+    'hidden'
+  );
+
+
+  if (deudas.length === 0) {
+
+    div.innerHTML =
+      '<h3><i class="fas fa-bell"></i> Sin recordatorios</h3><p>No hay deudas.</p>';
+
+    return;
+
+  }
+
+
+  let tabla = `
+
+    <h3>
+      <i class="fas fa-bell"></i>
+      Recordatorios
+    </h3>
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Ref</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Acción</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+  `;
+
+
+  deudas.forEach(r => {
+
+    tabla += `
+
+      <tr>
+
+        <td>${r.ref}</td>
+
+        <td>${r.cliente}</td>
+
+        <td>
+          ${formatearCOP(r.total)}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-small"
+            onclick="generarRecordatorio('${r.ref}')">
+
+            <i class="fab fa-whatsapp"></i>
+            Enviar
+
+          </button>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+
+  tabla += `
+      </tbody>
+    </table>
+  `;
+
+
+  div.innerHTML = tabla;
+
+}
+
+
+// ─── GENERAR RECORDATORIO ────────────────
+
+async function generarRecordatorio(ref) {
+
+  const r =
+    recibos.find(
+      x => x.ref === ref
+    );
+
+  if (!r) return;
+
+
+  const canvas =
+    await dibujarRecordatorioCanvas(r);
+
+
+  const blob =
+    await new Promise(
+      resolve =>
+        canvas.toBlob(
+          resolve,
+          'image/png'
+        )
+    );
+
+
+  const filename =
+    `${r.ref}.png`;
+
+
+  const file =
+    new File(
+      [blob],
+      filename,
+      {
+        type: 'image/png'
+      }
+    );
+
+
+  if (
+    navigator.share &&
+    navigator.canShare &&
+    navigator.canShare({
+      files: [file]
+    })
+  ) {
+
+    await navigator.share({
+
+      files: [file],
+
+      text: 'recordatorio de deuda 🔔'
+
+    });
+
+  } else {
+
+    const imgUrl =
+      canvas.toDataURL(
+        'image/png'
+      );
+
+    const link =
+      document.createElement('a');
+
+    link.href = imgUrl;
+
+    link.download =
+      filename;
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    document.body.removeChild(
+      link
+    );
+
+  }
+
+}
+
+
+// ─── FINALIZAR VENTA ─────────────────────
+
+function finalizarVenta() {
+
+  const pollosDisponibles =
+    inventario.filter(
+      p => !p.vendido
+    ).length;
+
+  const deudasPendientes =
+    recibos.filter(
+      r => r.metodo === 'Deuda'
+    ).length;
+
+
+  if (
+    pollosDisponibles > 0 ||
+    deudasPendientes > 0
+  ) {
+
+    let msg =
+      'No se puede finalizar:<br>';
+
+    if (pollosDisponibles) {
+
+      msg +=
+        `• ${pollosDisponibles} pollo(s) sin vender<br>`;
+
+    }
+
+    if (deudasPendientes) {
+
+      msg +=
+        `• ${deudasPendientes} fiado(s) pendiente(s)`;
+
+    }
+
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Espera',
+      msg
+    );
+
+    return;
+
+  }
+
+
+  if (recibos.length === 0) {
+
+    mostrarModal(
+      '<i class="fas fa-info-circle"></i> Vacío',
+      'No hay ventas.'
+    );
+
+    return;
+
+  }
+
+
+  mostrarModal(
+    '<i class="fas fa-question-circle"></i> ¿Finalizar?',
+    'Se borrará todo y se generará resumen.',
+    () => ejecutarFinalizacion()
+  );
+
+}
+
+
+function ejecutarFinalizacion() {
+
+  const kilos =
+    recibos.reduce(
+      (s, r) =>
+        s +
+        r.pollos.reduce(
+          (a, p) =>
+            a + p.peso,
+          0
+        ),
+      0
+    );
+
+
+  const monto =
+    recibos.reduce(
+      (s, r) =>
+        s + r.total,
+      0
+    );
+
+
+  const pollos =
+    recibos.reduce(
+      (s, r) =>
+        s + r.pollos.length,
+      0
+    );
+
+
+  recibos = [];
+
+  refCount = 1;
+
+  guardarDatos();
+
+  ocultarTodasLasSecciones();
+
+
+  const div =
+    document.getElementById(
+      'resumen-final'
+    );
+
+  div.classList.remove(
+    'hidden'
+  );
+
+
+  div.innerHTML = `
+
+    <h3>
+      <i class="fas fa-flag-checkered"></i>
+      Venta finalizada
+    </h3>
+
+    <p>
+      <strong>Pollos vendidos:</strong>
+      ${pollos}
+    </p>
+
+    <p>
+      <strong>Kilos:</strong>
+      ${kilos.toFixed(3)}
+      Gramos
+    </p>
+
+    <p>
+      <strong>Total:</strong>
+      ${formatearCOP(monto)}
+    </p>
+
+    <button
+      onclick="descargarResumenTXT(
+        ${kilos},
+        ${monto},
+        ${pollos}
+      )">
+
+      <i class="fas fa-file-download"></i>
+      Guardar resumen (.txt)
+
+    </button>
+
+  `;
+
+
+  actualizarPollosSeleccionables();
+
+}
+
+
+function descargarResumenTXT(
+  kilos,
+  monto,
+  pollos
+) {
+
+  const fecha =
+    new Date().toLocaleString(
+      "es-CO",
+      {
+        timeZone: "America/Caracas"
+      }
+    );
+
+
+  const contenido =
+`RESUMEN FINAL
+Fecha: ${fecha}
+Pollos: ${pollos}
+Kilos: ${kilos.toFixed(3)} kg
+Total: ${formatearCOP(monto)}
+¡Gracias! 🐔`;
+
+
+  const blob =
+    new Blob(
+      [contenido],
+      {
+        type:
+          'text/plain;charset=utf-8'
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const a =
+    document.createElement('a');
+
+  a.href = url;
+
+  a.download =
+    `resumen_${new Date()
+      .toISOString()
+      .slice(0,10)}.txt`;
+
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  document.body.removeChild(a);
+
+  URL.revokeObjectURL(url);
+
+
+  mostrarModal(
+    '<i class="fas fa-check-circle"></i> Éxito',
+    'Resumen descargado.'
+  );
+
+}
+
+
+// ─── INVENTARIO ───────────────────────────
+
+function verInventario() {
+
+  ocultarTodasLasSecciones();
+
+  const div =
+    document.getElementById(
+      'inventario-preview'
+    );
+
+  div.classList.remove(
+    'hidden'
+  );
+
+
+  const restantes =
+    inventario.filter(
+      p => !p.vendido
+    );
+
+  const vendidos =
+    inventario.filter(
+      p => p.vendido
+    );
+
+
+  let html =
+    '<h3><i class="fas fa-box"></i> Inventario</h3>';
+
+
+  if (restantes.length > 0) {
+
+    html +=
+      `<h4>Disponibles (${restantes.length})</h4><ul>`;
+
+
+    restantes.forEach(p => {
+
+      html +=
+        `<li>${p.peso.toFixed(3)} kg</li>`;
+
+    });
+
+
+    html += '</ul>';
+
+  } else {
+
+    html +=
+      '<p>No hay pollos disponibles.</p>';
+
+  }
+
+
+  if (vendidos.length > 0) {
+
+    html +=
+      `<h4>Vendidos (${vendidos.length})</h4><ul>`;
+
+
+    vendidos.forEach(p => {
+
+      html +=
+        `<li>${p.peso.toFixed(3)} kg</li>`;
+
+    });
+
+
+    html += '</ul>';
+
+  }
+
+
+  div.innerHTML = html;
+
+}
+
+
+// ─── BOTÓN OCULTO: 3 TOQUES ─────────────
+
+let toques = 0;
+
+let timeout;
+
+
+document
+  .getElementById('titulo')
+  .addEventListener(
+    'click',
+    function() {
+
+      toques++;
+
+
+      if (toques === 1) {
+
+        timeout =
+          setTimeout(
+            () => {
+              toques = 0;
+            },
+            600
+          );
+
+      } else if (toques === 3) {
+
+        clearTimeout(timeout);
+
+
+        mostrarModal(
+          '<i class="fas fa-exclamation-circle"></i> Modo Prueba',
+          '¿Borrar TODO?',
+          () => {
+
+            inventario = [];
+
+            recibos = [];
+
+            refCount = 1;
+
+            guardarDatos();
+
+            actualizarPollosSeleccionables();
+
+            mostrarModal(
+              '<i class="fas fa-check-circle"></i> Éxito',
+              'Datos borrados.'
+            );
+
+          }
+        );
+
+
+        toques = 0;
+
+      }
+
+    }
+  );
+
+
+// ─── INICIALIZACIÓN ──────────────────────
+
+window.onload = () => {
+
+  actualizarPollosSeleccionables();
+
+  ocultarTodasLasSecciones();
+
+};
+
+
+if ('serviceWorker' in navigator) {
+
+  window.addEventListener(
+    'load',
+    () => {
+
+      navigator.serviceWorker
+        .register(
+          'service-worker.js'
+        )
+        .catch(console.warn);
+
+    }
+  );
+
+}
+
+
+// ─── EDITAR RECIBO ───────────────────────
+
+function abrirModalEdicion(ref) {
+
+  const recibo =
+    recibos.find(
+      r => r.ref === ref
+    );
+
+  if (!recibo) return;
+
+
+  let pollosInputsHTML = '';
+
+
+  recibo.pollos.forEach(
+    (p, idx) => {
+
+      pollosInputsHTML += `
+
+        <div style="
+          display:flex;
+          gap:6px;
+          align-items:center;
+          margin:6px 0;
+        ">
+
+          <label style="
+            flex:1;
+            font-size:0.9em;
+          ">
+            Pollo ${idx + 1}:
+          </label>
+
+          <input
+            type="number"
+            step="0.001"
+            min="0.001"
+            value="${p.peso}"
+            id="edit-peso-${idx}"
+            style="
+              width:100px;
+              text-align:right;
+            "
+          >
+
+          <span
+            style="font-size:0.9em;">
+            g
+          </span>
+
+        </div>
+
+      `;
+
+    }
+  );
+
+
+  const extraHTML = `
+
+    <div style="margin-top:12px;">
+
+      <label style="
+        display:block;
+        margin:8px 0;
+        font-weight:bold;
+      ">
+        Precio por kilo:
+      </label>
+
+      <input
+        type="number"
+        id="edit-precio"
+        step="1"
+        min="1"
+        value="${recibo.precioPorKilo}"
+        style="
+          width:100%;
+          padding:8px;
+          font-size:1em;
+        "
+      >
+
+    </div>
+
+
+    <div style="margin-top:16px;">
+
+      <label style="
+        display:block;
+        margin:8px 0;
+        font-weight:bold;
+      ">
+        Pollos:
+      </label>
+
+      ${pollosInputsHTML}
+
+    </div>
+
+
+    <div style="
+      margin-top:12px;
+      font-weight:bold;
+      color:#d84315;
+    ">
+
+      <span id="edit-total-preview">
+        Total estimado:
+        ${formatearCOP(recibo.total)}
+      </span>
+
+    </div>
+
+  `;
+
+
+  const updatePreview = () => {
+
+    const precio =
+      parseFloat(
+        document.getElementById(
+          'edit-precio'
+        )?.value
+      ) || 0;
+
+
+    let total = 0;
+
+
+    recibo.pollos.forEach(
+      (_, idx) => {
+
+        const peso =
+          parseFloat(
+            document.getElementById(
+              `edit-peso-${idx}`
+            )?.value
+          ) || 0;
+
+
+        total +=
+          peso * precio;
+
+      }
+    );
+
+
+    document.getElementById(
+      'edit-total-preview'
+    ).textContent =
+      `Total estimado: ${formatearCOP(total)}`;
+
+  };
+
+
+  mostrarModal(
+    `<i class="fas fa-edit"></i> Editar ${recibo.ref}`,
+    `Modifique precio y/o pesos. Se recalculará el total.`,
+    () => guardarEdicion(ref),
+    extraHTML
+  );
+
+
+  setTimeout(
+    () => {
+
+      const precioInput =
+        document.getElementById(
+          'edit-precio'
+        );
+
+
+      if (precioInput) {
+
+        precioInput.addEventListener(
+          'input',
+          updatePreview
+        );
+
+      }
+
+
+      recibo.pollos.forEach(
+        (_, idx) => {
+
+          const pesoInput =
+            document.getElementById(
+              `edit-peso-${idx}`
+            );
+
+
+          if (pesoInput) {
+
+            pesoInput.addEventListener(
+              'input',
+              updatePreview
+            );
+
+          }
+
+        }
+      );
+
+
+      updatePreview();
+
+    },
+    100
+  );
+
+}
+
+
+function guardarEdicion(ref) {
+
+  const recibo =
+    recibos.find(
+      r => r.ref === ref
+    );
+
+  if (!recibo) return;
+
+
+  const nuevoPrecio =
+    parseFloat(
+      document.getElementById(
+        'edit-precio'
+      ).value
+    );
+
+
+  if (
+    isNaN(nuevoPrecio) ||
+    nuevoPrecio < 1
+  ) {
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Error',
+      'Precio por kilo inválido.'
+    );
+
+    return;
+
+  }
+
+
+  const nuevosPesos = [];
+
+  let error = false;
+
+
+  recibo.pollos.forEach(
+    (_, idx) => {
+
+      const peso =
+        parseFloat(
+          document.getElementById(
+            `edit-peso-${idx}`
+          ).value
+        );
+
+
+      if (
+        isNaN(peso) ||
+        peso <= 0
+      ) {
+
+        error = true;
+
+        return;
+
+      }
+
+
+      nuevosPesos.push(peso);
+
+    }
+  );
+
+
+  if (error) {
+
+    mostrarModal(
+      '<i class="fas fa-exclamation-triangle"></i> Error',
+      'Todos los pesos deben ser > 0.'
+    );
+
+    return;
+
+  }
+
+
+  recibo.precioPorKilo =
+    nuevoPrecio;
+
+
+  let nuevoTotal = 0;
+
+
+  recibo.pollos =
+    recibo.pollos.map(
+      (p, idx) => {
+
+        const nuevoPeso =
+          nuevosPesos[idx];
+
+
+        const subtotal =
+          nuevoPeso *
+          nuevoPrecio;
+
+
+        nuevoTotal +=
+          subtotal;
+
+
+        return {
+          peso: nuevoPeso,
+          subtotal
+        };
+
+      }
+    );
+
+
+  recibo.total =
+    nuevoTotal;
+
+
+  guardarDatos();
+
+
+  mostrarModal(
+    '<i class="fas fa-check-circle"></i> Éxito',
+    'Recibo actualizado.'
+  );
+
+
+  if (
+    document
+      .getElementById(
+        'deudas-lista'
+      )
+      .classList
+      .contains('hidden') === false
+  ) {
+
+    mostrarDeudas();
+
+  } else if (
+    document
+      .getElementById(
+        'pagados-lista'
+      )
+      .classList
+      .contains('hidden') === false
+  ) {
+
+    mostrarPagados();
+
+  } else if (
+    document
+      .getElementById(
+        'historial'
+      )
+      .classList
+      .contains('hidden') === false
+  ) {
+
+    mostrarHistorial();
+
+  }
+
+}
+
+
+function borrarRecibo(ref) {
+
+  recibos =
+    recibos.filter(
+      r => r.ref !== ref
+    );
+
+
+  guardarDatos();
+
+
+  mostrarModal(
+    '<i class="fas fa-check-circle"></i> Éxito',
+    `Recibo ${ref} eliminado.`
+  );
+
+
+  mostrarHistorial();
+
+}
+
+
+// ─── ACTUALIZACIÓN DEL SERVICE WORKER ───
+
+let newSW = null;
+
+
+if ('serviceWorker' in navigator) {
+
+  navigator.serviceWorker
+    .register('sw.js')
+    .then(reg => {
+
+      reg.addEventListener(
+        'updatefound',
+        () => {
+
+          const newWorker =
+            reg.installing;
+
+
+          newWorker.addEventListener(
+            'statechange',
+            () => {
+
+              if (
+                newWorker.state === 'installed' &&
+                navigator.serviceWorker.controller
+              ) {
+
+                newSW =
+                  newWorker;
+
+
+                const btn =
+                  document.createElement(
+                    'button'
+                  );
+
+
+                btn.id =
+                  'btn-actualizar';
+
+
+                btn.style.cssText = `
+
+                  position: fixed;
+
+                  bottom: 16px;
+
+                  right: 16px;
+
+                  background: #4CAF50;
+
+                  color: white;
+
+                  border: none;
+
+                  border-radius: 20px;
+
+                  padding: 8px 14px;
+
+                  font-size: 14px;
+
+                  font-weight: bold;
+
+                  box-shadow:
+                    0 2px 5px
+                    rgba(0,0,0,0.2);
+
+                  z-index: 9999;
+
+                  cursor: pointer;
+
+                `;
+
+
+                btn.innerHTML =
+                  '<i class="fas fa-sync-alt"></i> Actualizar';
+
+
+                btn.onclick = () => {
+
+                  if (newSW) {
+
+                    newSW.postMessage({
+                      type: 'SKIP_WAITING'
+                    });
+
+                    window.location.reload();
+
+                  }
+
+                };
+
+
+                document.body.appendChild(
+                  btn
+                );
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+    });
+
+}
+
+async function compartirReciboNativo(recibo) {
+  try {
+    const Share = Capacitor.Plugins.Share;
+    if(Share) {
+      const txt = "🍗 RECIBO - CHICKEN\n\nRef: " + recibo.ref + "\nCliente: " + recibo.cliente + "\nCantidad: " + recibo.pollos.length + " pollo(s)\nTotal: $" + formatearCOP(recibo.total) + "\nMetodo: " + recibo.metodo + "\nFecha: " + recibo.fecha + "\n\n¡Gracias por su compra!";
+      await Share.share({ title:"Recibo Chicken", text:txt, dialogTitle:"Compartir recibo" });
+    }
+  } catch(e) { console.error("Error compartiendo:",e); }
+}
+
+async function mostrarGaleriaRecibos() {
+  ocultarTodasLasSecciones();
+  document.getElementById('galeria-recibos').classList.remove('hidden');
+  renderGaleriaRecibos('Todos');
+}
+
+async function renderGaleriaRecibos(filtro) {
+  const contenedor = document.getElementById('galeria-contenido');
+  contenedor.innerHTML = '<p>Generando vistas previas...</p>';
+  
+  const recibosFiltrados = recibos.filter(r => {
+    if (filtro === 'Todos') return true;
+    if (filtro === 'Fiado') return r.metodo === 'Fiado';
+    if (filtro === 'Pagado') return r.metodo !== 'Fiado';
+    return true;
+  });
+  
+  contenedor.innerHTML = '';
+  if (recibosFiltrados.length === 0) {
+    contenedor.innerHTML = '<p>No hay recibos en esta categoría.</p>';
+    return;
+  }
+  
+  for (const r of recibosFiltrados) {
+    const canvas = await dibujarRecordatorioCanvas(r);
+    const dataUrl = canvas.toDataURL('image/png');
+    const estado = r.metodo === 'Fiado' ? '<span style="color:red">Fiado</span>' : '<span style="color:green">Pagado</span>';
+    
+    const div = document.createElement('div');
+    div.style.cssText = 'border:1px solid #ccc; border-radius:8px; padding:10px; background:#fff;';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong>${r.ref}</strong>
+        ${estado}
+      </div>
+      <img src="${dataUrl}" style="width:100%; max-width:300px; border-radius:4px; border:1px solid #eee;" />
+      <div style="margin-top:10px; text-align:center;">
+        <button onclick="compartirImagenRecibo('${r.ref}')" style="background:#25D366; color:white; padding:8px 15px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">
+          <i class="fab fa-whatsapp"></i> Compartir Imagen
+        </button>
+      </div>
+    `;
+    contenedor.appendChild(div);
+  }
+}
+
+async function compartirImagenRecibo(ref) {
+  try {
+    const r = recibos.find(rec => rec.ref === ref);
+    if (!r) return;
+    
+    const canvas = await dibujarRecordatorioCanvas(r);
+    canvas.toBlob(async (blob) => {
+      const Share = Capacitor.Plugins.Share;
+      if (Share && blob) {
+        const file = new File([blob], `recibo_${r.ref}.png`, { type: 'image/png' });
+        await Share.share({
+          title: 'Recibo Chicken',
+          text: `Recibo ${r.ref} - ${r.cliente}`,
+          files: [file],
+          dialogTitle: 'Compartir recibo'
+        });
+      } else {
+        alert('No se pudo compartir. Asegúrate de usar la app instalada.');
+      }
+    }, 'image/png');
+  } catch (e) {
+    console.error("Error al compartir:", e);
+    alert("Error: " + e.message);
+  }
+}
+</script>
+
+
+  <section id="galeria-recibos" class="hidden">
+    <h3><i class="fas fa-images"></i> Galería de Recibos</h3>
+    <div style="margin: 15px 0;">
+      <button onclick="renderGaleriaRecibos('Fiado')" style="background:#e74c3c; color:white; padding:8px 15px; border:none; border-radius:5px; margin:5px;">Fiados</button>
+      <button onclick="renderGaleriaRecibos('Pagado')" style="background:#2ecc71; color:white; padding:8px 15px; border:none; border-radius:5px; margin:5px;">Pagados</button>
+      <button onclick="renderGaleriaRecibos('Todos')" style="background:#3498db; color:white; padding:8px 15px; border:none; border-radius:5px; margin:5px;">Todos</button>
+    </div>
+    <div id="galeria-contenido" style="display:flex; flex-direction:column; gap:15px; padding:10px;"></div>
+    <button onclick="ocultarTodasLasSecciones()" style="margin-top:20px; padding:10px 20px; background:#888; color:white; border:none; border-radius:5px;">Volver</button>
+  </section>
+</body>
+</html>
